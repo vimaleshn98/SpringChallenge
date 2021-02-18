@@ -14,14 +14,11 @@ public class Player {
 
 	@Id
 	private int id;
-	@NotNull
-	@Size(min=2,message="Name should be atleast 2 characters long")
+	
 	private String name;
-	@NotNull
-	@Size(max=2,message="Age should be max of length 2")
+	
 	private int age;
-	@NotNull
-	@Size(min=2,message="Role should be atleast 2 characters long")
+	
 	private String role;
 	@ManyToOne
 	@JoinColumn(name="team_id")
