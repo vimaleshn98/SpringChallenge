@@ -17,10 +17,9 @@ public class Team {
 
 	@Id
 	private int id;
-	@NotNull
-	@Size(min=2,message="Name should be atleast 2 characters long")
+	
 	private String name;
-	@Size(min=2,message="Location should be atleast 2 characters long")
+	
 	private String location;
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "team", fetch = FetchType.LAZY)
 	private List<Player> player;
