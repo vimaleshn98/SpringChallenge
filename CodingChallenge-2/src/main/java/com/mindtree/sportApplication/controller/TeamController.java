@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,7 +53,7 @@ public class TeamController {
 	
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addTeam(@Valid  @RequestBody Team team) {
+	public ResponseEntity<?> addTeam(  @RequestBody Team team) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		try {
 			Team teams = teamService.addTeamDetails(team);
