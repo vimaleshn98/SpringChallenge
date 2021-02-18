@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class PlayerController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addPlayer(@Valid @RequestBody Player player) {
+	public ResponseEntity<?> addPlayer( @RequestBody Player player) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		try {
 			Player playr = playerService.addPlayerDetails(player);
@@ -50,7 +50,7 @@ public class PlayerController {
 	}
 	
 	@PutMapping("/updateBy/{id}")
-	public ResponseEntity<?> updatePlayer(@Valid @RequestBody Player player,@PathVariable int id){
+	public ResponseEntity<?> updatePlayer( @RequestBody Player player,@PathVariable int id){
 		Map<String, Object> map = new LinkedHashMap<>();
 		try {
 			Player mnd = playerService.updatePlayer(player, id);
