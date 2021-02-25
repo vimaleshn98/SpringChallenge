@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.mindtree</groupId>
 	<artifactId>sportApplication</artifactId>
-	<version>0.0.1-SNAPSHOT- ${BUILD_NUMBER}</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>CodingChallenge-2</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
