@@ -1,0 +1,176 @@
+pipeline {
+     agent any
+     triggers{
+         pollSCM('* * * * *')
+     }
+    tools{
+        maven 'maven'
+        jdk 'Jdk'
+    }
+    stages{
+          stage('Fetch') {
+            steps {
+               sh 'echo $JOB_NAME'
+                sh 'echo $BUILD_NUMBER'
+                sh 'echo Fetch'
+               git branch: 'master', url: 'https://github.com/roshenreji/SpringChallenge.git'
+            }
+        }
+        
+        stage('Clean'){
+            steps{
+                dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                    sh 'echo Clean'
+                    sh 'mvn  clean'
+                }
+            }
+        }
+        stage('Validate'){
+                steps{
+                     dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                
+                        sh 'mvn  validate'
+                     }
+                }
+            
+         }
+        stage('Compile'){
+                steps{
+                     dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                 
+                        sh 'echo Compile'
+                         sh 'mvn  compile'
+                     }
+                }
+            
+        }
+        
+        
+             stage('Test'){
+                 steps {
+                      dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                         sh 'echo Test'
+                         sh 'mvn test'
+                      }
+                 }
+                 post{
+                     always {
+                         junit '**/target/surefire-reports/TEST-*.xml'
+                     }
+                 }
+            }
+
+            stage('Sonar Analysis'){
+            steps{
+                 dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                    withSonarQubeEnv('Sonar'){
+                        withMaven(maven:'maven'){
+                            sh 'mvn sonar:sonar'
+                        }
+                        
+                  }
+                }
+            }
+            
+        }
+
+        stage('SonarQube Quality Gate') { 
+            steps{
+                timeout(time: 1, unit: 'HOURS') { 
+                    script{
+                        def qg = waitForQualityGate() 
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                         }
+                    }
+                    
+                }
+            }
+        }
+            stage('Build'){
+            steps {
+                 dir("C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2"){
+                
+                        sh 'echo Build'
+                        sh 'mvn  package -Dbuild.number=-${BUILD_NUMBER}'
+                 }
+            }
+            
+            post {
+                always {
+                    //junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'SampleCalculatorChallenge/target/*.jar'
+                     }
+                }
+             }
+
+             
+            stage('collect artifact'){
+                steps{
+                    archiveArtifacts artifacts: 'CodingChallenge-2/target/*.jar', followSymlinks: false
+                 }
+            }      
+         stage('deploy to artifactory')
+         {
+            steps{
+     
+                rtUpload (
+                    serverId: 'JfrogId',
+                    spec: '''{
+                    "files": [
+                         {
+                             "pattern": "CodingChallenge-2/target/*.jar",
+                             "target": "art-doc-dev-loc-new/sample/"
+                        }
+                     ]
+                }''',
+ 
+  
+    
+)
+     }}
+
+     stage('download from artifactory')
+         {
+            steps{
+     
+                rtDownload (
+                    serverId: 'JfrogId',
+                    spec: '''{
+                    "files": [
+                         {
+                             "pattern": "art-doc-dev-loc-new/sample/",
+                             "target": "CodingChallenge-2/"
+                        }
+                     ]
+                }''',
+ 
+  
+    buildName: 'Build2',
+    buildNumber: '1'
+)
+     }}
+     
+     stage('Email Notification'){
+         steps{
+                mail bcc: '', body: 'Executed Successfully', cc: '', from: '', replyTo: '', subject: 'Jenkins Pipeline', to: 'roshenreji.roshenreji@gmail.com'
+         }
+     }
+        
+    }
+    post{
+        success{
+            echo 'I succeeded!'
+            mail to:'roshenreji.roshenreji@gmail.com',
+            subject:"Pipeline Succeeded: ${currentBuild.fullDisplayName}",
+            body:"Built is success with ${env.BUILD_URL}"
+        }
+        failure{
+            echo 'I failed!'
+            mail to:'roshenreji.roshenreji@gmail.com',
+            subject:"Pipeline Failed: ${currentBuild.fullDisplayName}",
+            body:"Built is failed with ${env.BUILD_URL}"
+        }
+
+    }
+}
