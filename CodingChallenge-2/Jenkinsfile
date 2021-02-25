@@ -151,11 +151,7 @@ pipeline {
 )
      }}
      
-     stage('Email Notification'){
-         steps{
-                mail bcc: '', body: 'Executed Successfully', cc: '', from: '', replyTo: '', subject: 'Jenkins Pipeline', to: 'roshenreji.roshenreji@gmail.com'
-         }
-     }
+     
      stage('Deliver') {
         steps {
             sshagent(['4baffbbd-61c4-4561-b27c-021e3f5f66ef']){
