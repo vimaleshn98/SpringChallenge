@@ -161,7 +161,7 @@ pipeline {
             sshagent(['4baffbbd-61c4-4561-b27c-021e3f5f66ef']){
             sh 'ssh -i "newpem.pem" ubuntu@ec2-54-201-166-106.us-west-2.compute.amazonaws.com pwd'
 
-           sh 'scp -v -o StrictHostKeyChecking=no  -i C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2/target/*.jar ubuntu@00.00.00.00:/home/ubuntu'
+           sh 'scp -v -o StrictHostKeyChecking=no  -i C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2/target/*.jar ubuntu@54.201.166.106:/home/ubuntu'
             // sh "sshpass -p password ssh -o StrictHostKeyChecking=no -i /var/lib/jenkins/secrets/mykey ubuntu@00.00.00.00 '/home/ubuntu/start.sh'"
             }
         
