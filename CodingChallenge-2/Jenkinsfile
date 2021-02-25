@@ -156,6 +156,12 @@ pipeline {
                 mail bcc: '', body: 'Executed Successfully', cc: '', from: '', replyTo: '', subject: 'Jenkins Pipeline', to: 'roshenreji.roshenreji@gmail.com'
          }
      }
+     stage('Deliver') {
+        steps {
+             sh 'scp -v -o StrictHostKeyChecking=no  -i /var/lib/jenkins/secrets/mykey target/*.jar ubuntu@00.00.00.00:/home/ubuntu'
+             sh "sshpass -p password ssh -o StrictHostKeyChecking=no -i /var/lib/jenkins/secrets/mykey ubuntu@00.00.00.00 '/home/ubuntu/start.sh'"
+             
+        }
         
     }
     post{
