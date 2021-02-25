@@ -158,12 +158,16 @@ pipeline {
      }
      stage('Deliver') {
         steps {
-            bat 'FOR /F "tokens=5 delims= " %%P IN ('netstat -a -n -o ^| findstr :9090.*LISTENING') DO TaskKill.exe /F /PID %%P'
+            script{
+                bat 'FOR /F "tokens=5 delims= " %%P IN ('netstat -a -n -o ^| findstr :9090.*LISTENING') DO TaskKill.exe /F /PID %%P'
             sh 'mvn clean install'
             bat 'start java -jar ./CodingChallenge-2/target/sportApplication-0.0.1-SNAPSHOT- 15.jar'
+            }
+            
              
         }
         
+
     }
     }
     post{
