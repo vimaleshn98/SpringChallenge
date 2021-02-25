@@ -192,7 +192,7 @@ rtDownload (
 )
 
        sshagent(['4baffbbd-61c4-4561-b27c-021e3f5f66ef']){
-                    sh 'scp -r /C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2/target/*.jar ubuntu@54.201.166.106:/home/ubuntu/artifacts'
+                    sh 'scp -r C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2/target/*.jar ubuntu@54.201.166.106:/home/ubuntu/artifacts'
         }
         }
         failure{
