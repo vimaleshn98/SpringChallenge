@@ -158,21 +158,17 @@ pipeline {
      }
      stage('Deliver') {
         steps {
-            script{
-                bat 'FOR /F "tokens=5 delims= " %%P IN ('netstat -a -n -o ^| findstr :9090.*LISTENING') DO TaskKill.exe /F /PID %%P'
-            sh 'mvn clean install'
-            bat 'start java -jar ./CodingChallenge-2/target/sportApplication-0.0.1-SNAPSHOT- 15.jar'
-            }
-            
-             
-        }
+            sshagent(['4baffbbd-61c4-4561-b27c-021e3f5f66ef']){
+            sh 'ssh -i "newpem.pem" ubuntu@ec2-54-201-166-106.us-west-2.compute.amazonaws.com pwd'
+           sh 'scp -v -o StrictHostKeyChecking=no  -i C:/Users/roshe/.jenkins/workspace/AwsChallenge/CodingChallenge-2/target/*.jar ubuntu@00.00.00.00:/home/ubuntu'
+            // sh "sshpass -p password ssh -o StrictHostKeyChecking=no -i /var/lib/jenkins/secrets/mykey ubuntu@00.00.00.00 '/home/ubuntu/start.sh'"
         
 
     }
     }
     post{
         success{
-            echo 'I succeeded!'
+            echo 'I succeeded!'s
             mail to:'roshenreji.roshenreji@gmail.com',
             subject:"Pipeline Succeeded: ${currentBuild.fullDisplayName}",
             body:"Built is success with ${env.BUILD_URL}"
