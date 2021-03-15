@@ -1,5 +1,19 @@
-FROM openjdk:8
+FROM openjdk:8u111-jdk-alpine
+
+# Default Environment
+ARG DB_HOST=127.0.0.1:3306
+ARG DB_NAME=vdbname
+ARG DB_USER=vdbuser
+ARG DB_PASSWORD=vdbpass
+
+# Dynamic Environment
+ENV DB_HOST=$DB_HOST \
+  DB_NAME=$DB_NAME \
+  DB_USER=$DB_USER \
+  DB_PASSWORD=$DB_PASSWORD
+
 VOLUME /tmp
-ADD target/springboot-docker-compose-mysql.jar springboot-docker-compose-mysql.jar
-EXPOSE 8084
-ENTRYPOINT ["java","-jar","springboot-docker-compose-mysql.jar"]
+
+EXPOSE 8080
+ADD /target/sportApplication-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
